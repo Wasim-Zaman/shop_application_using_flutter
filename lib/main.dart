@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: "Shop Application",
       home: MyHome(),
     );
@@ -21,8 +21,8 @@ class MyHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Text("let's create a shop application"),
+    return const Center(
+      child: Text("let's create a shop application"),
     );
   }
 }
