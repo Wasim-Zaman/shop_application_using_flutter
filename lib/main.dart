@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import "./pages/product_overview_page.dart";
+
 void main() {
   runApp(const MyApp());
 }
@@ -9,20 +11,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: "Shop Application",
-      home: MyHome(),
-    );
-  }
-}
-
-class MyHome extends StatelessWidget {
-  const MyHome({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text("let's create a shop application"),
+      home: ProductOverViewPage(),
     );
   }
 }
