@@ -52,15 +52,16 @@ class ProductOverViewPage extends StatelessWidget {
       body: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 3 / 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
         itemBuilder: (ctx, index) {
           return Container(
+            padding: const EdgeInsets.all(5.0),
             child: ProductItem(
               availableProducts[index].id,
               availableProducts[index].title,
+              // availableProducts[index].price,
               availableProducts[index].imageUrl,
             ),
           );
