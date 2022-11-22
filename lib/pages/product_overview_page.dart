@@ -43,10 +43,12 @@ class ProductOverViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var appBar = AppBar(
+      title: const Text("Shop"),
+    );
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Shop"),
-      ),
+      appBar: appBar,
       body: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -55,7 +57,13 @@ class ProductOverViewPage extends StatelessWidget {
           mainAxisSpacing: 10,
         ),
         itemBuilder: (ctx, index) {
-          return ProductItem();
+          return Container(
+            child: ProductItem(
+              availableProducts[index].id,
+              availableProducts[index].title,
+              availableProducts[index].imageUrl,
+            ),
+          );
         },
         itemCount: availableProducts.length,
       ),
