@@ -43,6 +43,10 @@ class Products with ChangeNotifier {
     return [..._items]; // return a copy of the list of items not original
   }
 
+  Product getElementById(String id) {
+    return _items.firstWhere((element) => element.id == id);
+  }
+
   void addItem() {
     // _items.add();
     notifyListeners(); // This method will notify all the listeners for the update
