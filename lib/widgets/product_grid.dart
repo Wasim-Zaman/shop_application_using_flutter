@@ -22,11 +22,14 @@ class ProductGrid extends StatelessWidget {
       itemBuilder: (ctx, index) {
         return Container(
           padding: const EdgeInsets.all(5.0),
-          child: ProductItem(
-            products[index].id,
-            products[index].title,
-            // products[index].price,
-            products[index].imageUrl,
+          child: ChangeNotifierProvider(
+            create: (context) => products[index],
+            child: ProductItem(
+                // products[index].id,
+                // products[index].title,
+                // // products[index].price,
+                // products[index].imageUrl,
+                ),
           ),
         );
       },

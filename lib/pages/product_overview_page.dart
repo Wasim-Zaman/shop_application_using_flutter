@@ -9,10 +9,14 @@ class ProductOverViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appBar = AppBar(
       title: const Text("Shop"),
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+      elevation: 0,
     );
 
     return Scaffold(
       appBar: appBar,
+      backgroundColor: Colors.white,
       body: const ProductGrid(),
     );
   }
