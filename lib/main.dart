@@ -22,9 +22,6 @@ class MyApp extends StatelessWidget {
         title: "Shop Application",
         darkTheme: ThemeData.dark(),
         theme: ThemeData(
-          primarySwatch: Colors.green,
-          // ignore: deprecated_member_use
-          accentColor: Colors.deepPurple,
           fontFamily: "Lato",
         ),
         // home: ProductOverViewPage(),
