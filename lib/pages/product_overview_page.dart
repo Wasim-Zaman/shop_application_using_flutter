@@ -3,9 +3,15 @@ import "package:flutter/material.dart";
 import '../widgets/product_grid.dart';
 import "../components/my_components.dart";
 
-class ProductOverViewPage extends StatelessWidget {
+class ProductOverViewPage extends StatefulWidget {
   const ProductOverViewPage({super.key});
 
+  @override
+  State<ProductOverViewPage> createState() => _ProductOverViewPageState();
+}
+
+class _ProductOverViewPageState extends State<ProductOverViewPage> {
+  var _isFavorite = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,22 +25,37 @@ class ProductOverViewPage extends StatelessWidget {
         ),
         <Widget>[
           PopupMenuButton(
-            itemBuilder: (context) => [
+            itemBuilder: (_) => [
               const PopupMenuItem(
-                child: Text("Favorites Only"),
                 value: "Favorite",
+                child: Text("Favorites Only"),
               ),
               const PopupMenuItem(
+                value: "All",
                 child: Text("Show All"),
-                value: "Share",
               ),
             ],
+            onSelected: (String value) {
+              print(value);
+              // if (value == "Favorite") {
+              //   productData.showFavoritesOnly();
+              // } else {
+              //   productData.showAll();
+              // }
+              setState(() {
+                if (value == "Favorite") {
+                  _isFavorite = true;
+                } else {
+                  _isFavorite = false;
+                }
+              });
+            },
             icon: const Icon(Icons.more_vert),
           ),
         ],
       ),
       backgroundColor: Colors.white,
-      body: const ProductGrid(),
+      body: ProductGrid(_isFavorite),
     );
   }
 }

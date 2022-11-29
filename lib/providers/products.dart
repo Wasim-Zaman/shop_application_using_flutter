@@ -39,9 +39,24 @@ class Products with ChangeNotifier {
     ),
   ];
 
+  // var _showFavoritesOnly = false;
+
   List<Product> get items {
+    // if (_showFavoritesOnly) {
+    //   return _items.where((productItem) => productItem.isFavorite).toList();
+    // }
     return [..._items]; // return a copy of the list of items not original
   }
+
+  // void showFavoritesOnly() {
+  //   _showFavoritesOnly = true;
+  //   notifyListeners();
+  // }
+
+  // void showAll() {
+  //   _showFavoritesOnly = false;
+  //   notifyListeners();
+  // }
 
   Product getElementById(String id) {
     return _items.firstWhere((element) => element.id == id);
@@ -49,7 +64,7 @@ class Products with ChangeNotifier {
 
   // method that will return a list of favorite items
   List<Product> get favoriteItems {
-    return _items.where((element) => element.isFavorite).toList();
+    return _items.where((element) => element.isFavorite == true).toList();
   }
 
   void addItem() {
