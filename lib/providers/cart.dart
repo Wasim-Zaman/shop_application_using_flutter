@@ -25,6 +25,10 @@ class Cart with ChangeNotifier {
     return {..._items};
   }
 
+  int get countCarts {
+    return _items.length;
+  }
+
   // Adding CartItem into the existing list of CartItme
   void addCartItem(String productId, String title, double price) {
     // Check if the product is already added to the cart
@@ -41,13 +45,15 @@ class Cart with ChangeNotifier {
     } else {
       // Add new cart into the map
       _items.putIfAbsent(
-          productId,
-          () => CartItem(
-                id: DateTime.now().toString(),
-                price: price,
-                title: title,
-                quantity: 1,
-              ));
+        productId,
+        () => CartItem(
+          id: DateTime.now().toString(),
+          price: price,
+          title: title,
+          quantity: 1,
+        ),
+      );
     }
+    notifyListeners();
   }
 }

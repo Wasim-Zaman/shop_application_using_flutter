@@ -1,7 +1,10 @@
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
-import '../widgets/product_grid.dart';
 import "../components/my_components.dart";
+import '../widgets/product_grid.dart';
+import "../providers/cart.dart";
+import "../widgets/badge.dart";
 
 class ProductOverViewPage extends StatefulWidget {
   const ProductOverViewPage({super.key});
@@ -14,6 +17,7 @@ class _ProductOverViewPageState extends State<ProductOverViewPage> {
   var _isFavorite = false;
   @override
   Widget build(BuildContext context) {
+    final cartData = Provider.of<Cart>(context);
     return Scaffold(
       appBar: appBar(
         const Text(
@@ -51,6 +55,13 @@ class _ProductOverViewPageState extends State<ProductOverViewPage> {
               });
             },
             icon: const Icon(Icons.more_vert),
+          ),
+          Badge(
+            child: IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.shopping_cart),
+            ),
+            value: cartData.countCarts.toString(),
           ),
         ],
       ),
