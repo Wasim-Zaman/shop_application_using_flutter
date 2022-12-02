@@ -41,7 +41,7 @@ class _ProductOverViewPageState extends State<ProductOverViewPage> {
               ),
             ],
             onSelected: (String value) {
-              print(value);
+              // print(value);
               // if (value == "Favorite") {
               //   productData.showFavoritesOnly();
               // } else {
@@ -58,14 +58,14 @@ class _ProductOverViewPageState extends State<ProductOverViewPage> {
             icon: const Icon(Icons.more_vert),
           ),
           Badge(
+            value: cartData.countCarts.toString(),
             child: IconButton(
               onPressed: () {
                 // Navigate to cart page
                 Navigator.pushNamed(context, CartPage.pageName);
               },
-              icon: Icon(Icons.shopping_cart),
+              icon: const Icon(Icons.shopping_cart),
             ),
-            value: cartData.countCarts.toString(),
           ),
         ],
       ),

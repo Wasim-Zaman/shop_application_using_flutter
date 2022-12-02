@@ -7,6 +7,8 @@ import "../providers/product.dart";
 import "../providers/cart.dart";
 
 class ProductItem extends StatelessWidget {
+  const ProductItem({super.key});
+
   // final String id;
   // final String title;
   // // final double price;
