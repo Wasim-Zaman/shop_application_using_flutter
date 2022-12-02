@@ -1,7 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class Badge extends StatelessWidget {
   Badge({
+    super.key,
     required this.child,
     required this.value,
     this.color = Colors.black,
