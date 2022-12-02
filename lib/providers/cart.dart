@@ -29,19 +29,28 @@ class Cart with ChangeNotifier {
     return _items.length;
   }
 
+  double get totalAmount {
+    double total = 0.0;
+    _items.forEach((key, value) {
+      total += value.quantity * value.price;
+    });
+    return total;
+  }
+
   // Adding CartItem into the existing list of CartItme
   void addCartItem(String productId, String title, double price) {
     // Check if the product is already added to the cart
     if (_items.containsKey(productId)) {
       // Increase the quantity of the cart
       _items.update(
-          productId,
-          (existingCartItem) => CartItem(
-                id: existingCartItem.id,
-                price: existingCartItem.price,
-                title: existingCartItem.title,
-                quantity: existingCartItem.quantity + 1,
-              ));
+        productId,
+        (existingCartItem) => CartItem(
+          id: existingCartItem.id,
+          price: existingCartItem.price,
+          title: existingCartItem.title,
+          quantity: existingCartItem.quantity + 1,
+        ),
+      );
     } else {
       // Add new cart into the map
       _items.putIfAbsent(

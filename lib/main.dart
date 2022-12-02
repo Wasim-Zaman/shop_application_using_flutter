@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import "./pages/product_overview_page.dart";
 import './pages/product_detail_screen.dart';
+import './pages/cart_page.dart';
 
 import "./providers/products.dart";
 import "./providers/cart.dart";
@@ -31,12 +32,14 @@ class MyApp extends StatelessWidget {
         darkTheme: ThemeData.dark(),
         theme: ThemeData(
           fontFamily: "Lato",
+          primaryColor: Colors.deepOrange,
         ),
         // home: ProductOverViewPage(),
         routes: {
           "/": (context) => const ProductOverViewPage(),
           ProductDetailScreen.routeName: (context) =>
               const ProductDetailScreen(),
+          CartPage.pageName: (context) => const CartPage(),
         },
       ),
     );

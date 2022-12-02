@@ -5,6 +5,7 @@ import "../components/my_components.dart";
 import '../widgets/product_grid.dart';
 import "../providers/cart.dart";
 import "../widgets/badge.dart";
+import "../pages/cart_page.dart";
 
 class ProductOverViewPage extends StatefulWidget {
   const ProductOverViewPage({super.key});
@@ -58,7 +59,10 @@ class _ProductOverViewPageState extends State<ProductOverViewPage> {
           ),
           Badge(
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                // Navigate to cart page
+                Navigator.pushNamed(context, CartPage.pageName);
+              },
               icon: Icon(Icons.shopping_cart),
             ),
             value: cartData.countCarts.toString(),
