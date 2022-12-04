@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
+import '../widgets/total_price_list_tile_item.dart';
 import '../components/my_components.dart';
 import '../providers/cart.dart'
     show Cart; // in order to avoid CartItem confusion
@@ -21,50 +22,14 @@ class CartPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Card(
-            margin: const EdgeInsets.all(15),
-            borderOnForeground: true,
-            elevation: 6,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Total',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  const Spacer(),
-                  Chip(
-                    label: Text(
-                      '\$${cartData.totalAmount}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    backgroundColor: Theme.of(context).primaryColor,
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "ORDER NOW",
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          TotalPriceListTile(cartData: cartData),
           const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) {
                 return CartItem(
                   price: cartData.items.values.toList()[index].price,
+                  productKey: cartData.items.keys.toList()[index],
                   id: cartData.items.values.toList()[index].id,
                   title: cartData.items.values.toList()[index].title,
                   quantity: cartData.items.values.toList()[index].quantity,

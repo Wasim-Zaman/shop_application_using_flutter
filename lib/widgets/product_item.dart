@@ -23,13 +23,7 @@ class ProductItem extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(13.0),
       child: GridTile(
-        // header: GridTileBar(
-        //   backgroundColor: Colors.white60,
-        //   leading: Text(
-        //     "\$ ${price.toStringAsFixed(3)}",
-        //     textAlign: TextAlign.center,
-        //   ),
-        // ),
+
         footer: GridTileBar(
           backgroundColor: Colors.black87,
           leading: Consumer<Product>(
