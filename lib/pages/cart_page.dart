@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
-import '../widgets/total_price_list_tile_item.dart';
+import '../widgets/list_tile_item.dart';
 import '../components/my_components.dart';
 import '../providers/cart.dart'
     show Cart; // in order to avoid CartItem confusion
@@ -22,7 +22,7 @@ class CartPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          TotalPriceListTile(cartData: cartData),
+          ListTileItem(cartData: cartData),
           const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(

@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 
 import "../providers/cart.dart";
 
-class TotalPriceListTile extends StatelessWidget {
-  const TotalPriceListTile({
+class ListTileItem extends StatelessWidget {
+  const ListTileItem({
     Key? key,
     required this.cartData,
   }) : super(key: key);
