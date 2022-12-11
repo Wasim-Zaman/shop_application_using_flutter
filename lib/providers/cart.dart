@@ -18,7 +18,7 @@ class Cart with ChangeNotifier {
   // Creating a list of CartItems, but each CartItem will belong to
   // specific product id
 
-  final Map<String, CartItem> _items = {};
+  Map<String, CartItem> _items = {};
 
   // create a getter
   Map<String, CartItem> get items {
@@ -68,6 +68,11 @@ class Cart with ChangeNotifier {
 
   void deleteItem(String key) {
     _items.remove(key);
+    notifyListeners();
+  }
+
+  void clear() {
+    _items = {};
     notifyListeners();
   }
 }

@@ -6,6 +6,7 @@ import '../widgets/product_grid.dart';
 import "../providers/cart.dart";
 import "../widgets/badge.dart";
 import "../pages/cart_page.dart";
+import '../widgets/app_drawer.dart';
 
 class ProductOverViewPage extends StatefulWidget {
   const ProductOverViewPage({super.key});
@@ -20,12 +21,14 @@ class _ProductOverViewPageState extends State<ProductOverViewPage> {
   Widget build(BuildContext context) {
     final cartData = Provider.of<Cart>(context);
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: appBar(
         const Text(
-          "Shop Application",
+          "Shop",
           style: TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.bold,
+            fontFamily: "Lato",
           ),
         ),
         <Widget>[

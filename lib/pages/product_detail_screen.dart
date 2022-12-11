@@ -16,11 +16,12 @@ class ProductDetailScreen extends StatelessWidget {
         Provider.of<Products>(context, listen: false).getElementById(productId);
     return Scaffold(
       appBar: appBar(
-        ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(loadedProduct.imageUrl),
+        Text(
+          loadedProduct.title,
+          style: const TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
           ),
-          title: Text(loadedProduct.title),
         ),
         <Widget>[],
       ),

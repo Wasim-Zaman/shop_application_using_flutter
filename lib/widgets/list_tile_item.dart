@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
 
+import "../providers/order.dart";
 import "../providers/cart.dart";
 
 class ListTileItem extends StatelessWidget {
@@ -40,6 +42,9 @@ class ListTileItem extends StatelessWidget {
             TextButton(
               onPressed: () {
                 // order your product now
+                Provider.of<Orders>(context, listen: false).addOrder(
+                    cartData.items.values.toList(), cartData.totalAmount);
+                cartData.clear();
               },
               child: Text(
                 "ORDER NOW",
