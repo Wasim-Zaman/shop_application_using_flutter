@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -36,6 +38,41 @@ class _OrderItemState extends State<OrderItem> {
               ),
             ),
           ),
+
+          // Expand list tile on press
+          if (isExpanded)
+            Container(
+              margin: const EdgeInsets.all(10),
+              height: min(
+                (widget.order.products.length * 20 + 30),
+                150,
+              ),
+              child: ListView(
+                children: widget.order.products
+                    .map((product) => Card(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                product.title,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                '${product.quantity}x \t \$${product.price}',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ),
         ],
       ),
     );
