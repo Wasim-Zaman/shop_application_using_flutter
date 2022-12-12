@@ -42,9 +42,13 @@ class ListTileItem extends StatelessWidget {
             TextButton(
               onPressed: () {
                 // order your product now
-                Provider.of<Orders>(context, listen: false).addOrder(
-                    cartData.items.values.toList(), cartData.totalAmount);
-                cartData.clear();
+                if (cartData.items.values.isNotEmpty) {
+                  Provider.of<Orders>(context, listen: false).addOrder(
+                      cartData.items.values.toList(), cartData.totalAmount);
+                  cartData.clear();
+                } else {
+                  print("No Products in a cart");
+                }
               },
               child: Text(
                 "ORDER NOW",
