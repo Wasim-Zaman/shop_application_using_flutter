@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../pages/user_product_page.dart';
 import '../pages/orders_page.dart';
+
+import '../components/my_components.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -8,7 +11,7 @@ class AppDrawer extends StatelessWidget {
   List<Widget> drawerItem(
       BuildContext ctx, IconData icon, String title, String routeName) {
     return [
-      Divider(),
+      const Divider(),
       ListTile(
         leading: Icon(icon),
         title: Text(title),
@@ -27,7 +30,7 @@ class AppDrawer extends StatelessWidget {
           AppBar(
             automaticallyImplyLeading: false,
             title: const Text('Screens'),
-            backgroundColor: Theme.of(context).accentColor,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
           ...drawerItem(
             context,
@@ -40,7 +43,13 @@ class AppDrawer extends StatelessWidget {
             Icons.request_quote,
             "Orders",
             OrdersPage.routeName,
-          )
+          ),
+          ...drawerItem(
+            context,
+            Icons.manage_accounts,
+            'Manage Products',
+            UserProductPage.pageName,
+          ),
         ],
       ),
     );
