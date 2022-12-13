@@ -34,6 +34,42 @@ class CartItem extends StatelessWidget {
         ),
       ),
       direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) => showDialog(
+          context: context,
+          builder: (ctx) {
+            return AlertDialog(
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+              title: const Text('Are you sure?'),
+              content: const Text('Do you really want to delete cart item?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop(false);
+                  },
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(ctx).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Cart item deleted',
+                          textAlign: TextAlign.center,
+                        ),
+                        backgroundColor: Colors.red,
+                        dismissDirection: DismissDirection.down,
+                      ),
+                    );
+                    Navigator.of(ctx).pop(true);
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            );
+          }),
       onDismissed: (direction) {
         Provider.of<Cart>(context, listen: false).deleteItem(productKey);
       },
