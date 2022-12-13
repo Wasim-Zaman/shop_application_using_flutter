@@ -23,7 +23,6 @@ class ProductItem extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(13.0),
       child: GridTile(
-
         footer: GridTileBar(
           backgroundColor: Colors.black87,
           leading: Consumer<Product>(
@@ -46,7 +45,18 @@ class ProductItem extends StatelessWidget {
             onPressed: () {
               // Add product into the cart
               cartData.addCartItem(product.id, product.title, product.price);
-              // Reflect the changes into the product overview screen
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Item added to cart!'),
+                  duration: const Duration(seconds: 3),
+                  action: SnackBarAction(
+                      label: "Undo",
+                      onPressed: () {
+                        cartData.removeSingleCartItem(product.id);
+                      }),
+                ),
+              );
             },
           ),
         ),
