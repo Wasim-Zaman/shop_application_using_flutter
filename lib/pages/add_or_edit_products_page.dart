@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../components/my_components.dart' as component;
 import '../providers/product.dart';
+import '../providers/products.dart';
 
 class AddOrEditProductsPage extends StatefulWidget {
   const AddOrEditProductsPage({super.key});
@@ -19,18 +21,48 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
   final TextEditingController _imageUrlController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   var _newProduct = Product(
-    id: '',
+    id: null,
     title: '',
     description: '',
     price: 0,
     imageUrl: '',
   );
+  var _startingValues = {
+    'title': '',
+    'description': '',
+    'id': '',
+    'price': '',
+  };
+
+  var _isInit = true;
 
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_whenFocusChanges);
 
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      final productId = ModalRoute.of(context)?.settings.arguments;
+      if (productId != null) {
+        _newProduct = Provider.of<Products>(
+          context,
+          listen: false,
+        ).getElementById(productId.toString());
+        _startingValues = {
+          'title': _newProduct.title,
+          'id': _newProduct.id,
+          'description': _newProduct.description,
+          'price': _newProduct.price.toString(),
+        };
+        _imageUrlController.text = _newProduct.imageUrl;
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
@@ -43,11 +75,10 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
   }
 
   void _whenFocusChanges() {
+    // When the image url text field will loss focus, we will simply
+    // rebuild the whole page so that the image is shown based on the
+    // value of the imageUrlController.
     if (!_imageUrlFocusNode.hasFocus) {
-      // when the image url text field will loss focus, we will simply
-      // rebuild the whole page so that the image is shown based on the
-      // value of the imageUrlController.
-
       /* DON'T SHOW PREVIEW IF WE HAVE INCORRECT URL */
 
       // Similarly don't show a preview if we have incorrect URL.
@@ -80,12 +111,24 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
       // for every text form field.
     }
     _formKey.currentState!.save();
-    component.mySnackbar("Saved", "Product saved successfully");
+
     // print(_newProduct.id);
     // print(_newProduct.title);
     // print(_newProduct.price);
     // print(_newProduct.description);
     // print(_newProduct.imageUrl);
+
+    if (_newProduct.id == null) {
+      component.mySnackbar("Saved", "Product saved successfully");
+      Provider.of<Products>(context, listen: false).addItem(_newProduct);
+      Navigator.of(context).pop();
+    } else {
+      component.mySnackbar("Updated", "Product updated successfully");
+
+      Provider.of<Products>(context, listen: false)
+          .updateItem(_newProduct.id, _newProduct);
+      Navigator.of(context).pop();
+    }
   }
 
   bool isNumeric(String str) {
@@ -110,6 +153,7 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
               children: [
                 TextFormField(
                   // autovalidateMode: AutovalidateMode.onUserInteraction,
+                  initialValue: _startingValues['title'],
                   decoration: InputDecoration(
                     labelText: "Title",
                     labelStyle: TextStyle(
@@ -128,6 +172,7 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                       description: _newProduct.description,
                       price: _newProduct.price,
                       imageUrl: _newProduct.imageUrl,
+                      isFavorite: _newProduct.isFavorite,
                     );
                   },
                   validator: (value) {
@@ -139,6 +184,7 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                   },
                 ),
                 TextFormField(
+                  initialValue: _startingValues['price'],
                   decoration: InputDecoration(
                     labelText: "Price",
                     labelStyle: TextStyle(
@@ -158,6 +204,7 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                       description: _newProduct.description,
                       price: double.parse(newValue!),
                       imageUrl: _newProduct.imageUrl,
+                      isFavorite: _newProduct.isFavorite,
                     );
                   },
                   validator: (value) {
@@ -179,6 +226,7 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                   },
                 ),
                 TextFormField(
+                  initialValue: _startingValues['description'],
                   decoration: InputDecoration(
                     labelText: "Description",
                     labelStyle: TextStyle(
@@ -196,6 +244,7 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                       description: newValue!,
                       price: _newProduct.price,
                       imageUrl: _newProduct.imageUrl,
+                      isFavorite: _newProduct.isFavorite,
                     );
                   },
                   validator: (value) {
@@ -217,7 +266,7 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                         right: 12,
                       ),
                       height: MediaQuery.of(context).size.height * 0.20,
-                      width: MediaQuery.of(context).size.width * 0.20,
+                      width: MediaQuery.of(context).size.width * 0.30,
                       decoration: BoxDecoration(
                         border: Border.all(
                           width: 1,
@@ -233,6 +282,13 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                             : Image.network(
                                 _imageUrlController.text,
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    child: Text("No Image Found"),
+                                  );
+                                },
                                 // loadingBuilder: (context, child, loadingProgress) =>
                                 //     const CircularProgressIndicator(),
                               ),
@@ -263,6 +319,7 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                             description: _newProduct.description,
                             price: _newProduct.price,
                             imageUrl: newValue!,
+                            isFavorite: _newProduct.isFavorite,
                           );
                         },
                         validator: (value) {

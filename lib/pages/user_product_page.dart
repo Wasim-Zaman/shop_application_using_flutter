@@ -35,6 +35,7 @@ class UserProductPage extends StatelessWidget {
             itemCount: productsData.items.length,
             itemBuilder: (_, index) {
               return UserProductsItem(
+                id: productsData.items[index].id,
                 title: productsData.items[index].title,
                 imageUrl: productsData.items[index].imageUrl,
               );
