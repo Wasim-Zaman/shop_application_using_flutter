@@ -47,6 +47,20 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
       // when the image url text field will loss focus, we will simply
       // rebuild the whole page so that the image is shown based on the
       // value of the imageUrlController.
+
+      /* DON'T SHOW PREVIEW IF WE HAVE INCORRECT URL */
+
+      // Similarly don't show a preview if we have incorrect URL.
+
+      if (((!_imageUrlController.text.startsWith('https') &&
+              !_imageUrlController.text.startsWith('http'))) ||
+          ((!_imageUrlController.text.endsWith('png') &&
+              !_imageUrlController.text.endsWith('jpg') &&
+              !_imageUrlController.text.endsWith('jpeg')))) {
+        return;
+      }
+
+      // Update the screen only for correct image url
       setState(() {
         // print('focus lost');
       });
@@ -59,13 +73,28 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
   void _saveForm() {
     // in order to save the form, we need access to the form widget,
     // for that we will need Global Key to access or interact with the form.
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid) {
+      return;
+      // do not let the below code to be executed if form is not valid
+      // for every text form field.
+    }
     _formKey.currentState!.save();
     component.mySnackbar("Saved", "Product saved successfully");
-    print(_newProduct.id);
-    print(_newProduct.title);
-    print(_newProduct.price);
-    print(_newProduct.description);
-    print(_newProduct.imageUrl);
+    // print(_newProduct.id);
+    // print(_newProduct.title);
+    // print(_newProduct.price);
+    // print(_newProduct.description);
+    // print(_newProduct.imageUrl);
+  }
+
+  bool isNumeric(String str) {
+    try {
+      var value = double.parse(str);
+    } on FormatException {
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -80,6 +109,7 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
             child: Column(
               children: [
                 TextFormField(
+                  // autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     labelText: "Title",
                     labelStyle: TextStyle(
@@ -99,6 +129,13 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                       price: _newProduct.price,
                       imageUrl: _newProduct.imageUrl,
                     );
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please provide a value";
+                    } else {
+                      return null;
+                    }
                   },
                 ),
                 TextFormField(
@@ -123,6 +160,23 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                       imageUrl: _newProduct.imageUrl,
                     );
                   },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter a price";
+                    }
+                    if (!isNumeric(value)) {
+                      return "Please enter numeric value";
+                    }
+                    // if (double.tryParse(value) == null) {
+                    //   return "Please enter numeric value";
+                    // }
+
+                    if (double.parse(value) <= 0) {
+                      return "Please enter a price greater then zero";
+                    }
+
+                    return null;
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(
@@ -144,6 +198,15 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                       imageUrl: _newProduct.imageUrl,
                     );
                   },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter description";
+                    }
+                    if (value.length <= 10) {
+                      return 'Should be greater than 10 characters';
+                    }
+                    return null;
+                  },
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -163,7 +226,10 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                       ),
                       child: FittedBox(
                         child: _imageUrlController.text.isEmpty
-                            ? const Text("Enter Image URL")
+                            ? const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text("No Image URL"),
+                              )
                             : Image.network(
                                 _imageUrlController.text,
                                 fit: BoxFit.cover,
@@ -175,7 +241,7 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                     Expanded(
                       child: TextFormField(
                         decoration: InputDecoration(
-                          labelText: "Image URL",
+                          labelText: "Enter Image URL",
                           labelStyle: TextStyle(
                             color: Theme.of(context).primaryColor,
                             decorationColor: Theme.of(context).primaryColor,
@@ -198,6 +264,21 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
                             price: _newProduct.price,
                             imageUrl: newValue!,
                           );
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter an image URL";
+                          }
+                          if (!value.startsWith('https') &&
+                              !value.startsWith('http')) {
+                            return "Please enter a valid URL";
+                          }
+                          if (!value.endsWith('png') &&
+                              !value.endsWith('jpg') &&
+                              !value.endsWith('jpeg')) {
+                            return "Please enter a valid image URL";
+                          }
+                          return null;
                         },
                       ),
                     ),
