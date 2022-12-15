@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Product with ChangeNotifier {
-  final String id;
+  // ignore: prefer_typing_uninitialized_variables
+  final id;
   final String title;
   final String description;
   final double price;
