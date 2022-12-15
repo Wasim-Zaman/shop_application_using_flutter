@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import '../pages/user_product_page.dart';
 import '../pages/orders_page.dart';
 
-import '../components/my_components.dart';
-
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 

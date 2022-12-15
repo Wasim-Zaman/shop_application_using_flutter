@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 PreferredSizeWidget appBar(Widget title, List<Widget> listOfWidgets) {
   return AppBar(
@@ -14,5 +15,16 @@ PreferredSizeWidget appBar(Widget title, List<Widget> listOfWidgets) {
       statusBarBrightness: Brightness.dark,
     ),
     actions: listOfWidgets,
+  );
+}
+
+SnackbarController mySnackbar(String title, String message) {
+  return Get.snackbar(
+    title,
+    message,
+    snackPosition: SnackPosition.BOTTOM,
+    overlayBlur: 3,
+    isDismissible: true,
+    dismissDirection: DismissDirection.down,
   );
 }

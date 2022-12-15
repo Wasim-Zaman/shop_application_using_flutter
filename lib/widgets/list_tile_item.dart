@@ -47,7 +47,13 @@ class ListTileItem extends StatelessWidget {
                       cartData.items.values.toList(), cartData.totalAmount);
                   cartData.clear();
                 } else {
-                  print("No Products in a cart");
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('No products in cart!'),
+                      backgroundColor: Theme.of(context).errorColor,
+                    ),
+                  );
                 }
               },
               child: Text(

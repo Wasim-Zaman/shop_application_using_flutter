@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
+import './pages/add_or_edit_products_page.dart';
 import "./pages/product_overview_page.dart";
 import './pages/product_detail_screen.dart';
 import './pages/user_product_page.dart';
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
           create: (context) => Orders(),
         )
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Shop",
         darkTheme: ThemeData.dark(),
@@ -51,6 +53,8 @@ class MyApp extends StatelessWidget {
           CartPage.pageName: (context) => const CartPage(),
           OrdersPage.routeName: (context) => const OrdersPage(),
           UserProductPage.pageName: (context) => const UserProductPage(),
+          AddOrEditProductsPage.pageName: (context) =>
+              const AddOrEditProductsPage(),
         },
       ),
     );
