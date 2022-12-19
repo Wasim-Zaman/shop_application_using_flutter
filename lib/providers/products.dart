@@ -73,24 +73,57 @@ class Products with ChangeNotifier {
 
   Future<void> addItem(Product product) async {
     const url =
-        'https://shop-application-296aa-default-rtdb.firebaseio.com/products.json';
+        'https://shop-application-296aa-default-rtdb.firebaseio.com/products';
 
-    http
-        .post(
-      Uri.parse(url),
-      body: json.encode(
-        {
-          'id': product.id,
-          'title': product.title,
-          'price': product.price,
-          'description': product.description,
-          'imageUrl': product.imageUrl,
-          'isFavorite': product.isFavorite,
-        },
-      ),
-    )
-        .then((response) {
-      // if (response.statusCode == 200) {
+    // return http
+    //     .post(
+    //   Uri.parse(url),
+    //   body: json.encode(
+    //     {
+    //       'id': product.id,
+    //       'title': product.title,
+    //       'price': product.price,
+    //       'description': product.description,
+    //       'imageUrl': product.imageUrl,
+    //       'isFavorite': product.isFavorite,
+    //     },
+    //   ),
+    // )
+    //     .then((response) {
+    //   final body = json.decode(response.body);
+    //   print("Body: $body");
+    //   print("Status code: ${response.statusCode}");
+
+    //   final newProduct = Product(
+    //     id: body['name'],
+    //     title: product.title,
+    //     description: product.title,
+    //     price: product.price,
+    //     imageUrl: product.imageUrl,
+    //   );
+    //   _items.add(newProduct);
+    //   notifyListeners();
+    // }).catchError((error) {
+    //   print('error');
+    //   throw error;
+    // });
+    // This method will notify all the listeners for the update
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: json.encode(
+          {
+            'id': product.id,
+            'title': product.title,
+            'price': product.price,
+            'description': product.description,
+            'imageUrl': product.imageUrl,
+            'isFavorite': product.isFavorite,
+          },
+        ),
+      );
+
       final body = json.decode(response.body);
       print("Body: $body");
       print("Status code: ${response.statusCode}");
@@ -104,9 +137,10 @@ class Products with ChangeNotifier {
       );
       _items.add(newProduct);
       notifyListeners();
-      // }
-    });
-    // This method will notify all the listeners for the update
+    } catch (error) {
+      print('error');
+      throw error;
+    }
   }
 
   void updateItem(String id, Product product) {

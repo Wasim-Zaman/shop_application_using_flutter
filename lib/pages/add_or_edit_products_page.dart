@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 import '../components/my_components.dart' as component;
 import '../providers/product.dart';
@@ -103,7 +104,7 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
     // }
   }
 
-  void _saveForm() async {
+  Future<void> _saveForm() async {
     // in order to save the form, we need access to the form widget,
     // for that we will need Global Key to access or interact with the form.
     final isValid = _formKey.currentState!.validate();
@@ -125,15 +126,64 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
 
     if (_newProduct.id == null) {
       // component.mySnackbar("Saved", "Product saved successfully");
-      _isLoading = false;
-      Provider.of<Products>(context, listen: false)
-          .addItem(_newProduct)
-          .then((value) => Navigator.of(context).pop());
+      // Provider.of<Products>(context, listen: false)
+      //     .addItem(_newProduct)
+      //     .catchError((error) {
+      //   print('error is catched!');
+      //   return showDialog(
+      //       context: context,
+      //       builder: (ctx) => AlertDialog(
+      //             icon: Icon(Icons.error),
+      //             title: const Text('Error'),
+      //             content: const Text("Something went wrong!"),
+      //             actions: [
+      //               TextButton(
+      //                 onPressed: () {
+      //                   Navigator.of(context).pop();
+      //                 },
+      //                 child: const Text('Ok'),
+      //               ),
+      //             ],
+      //           ));
+      // }).then((_) {
+      //   setState(() {
+      //     _isLoading = false;
+      //   });
+      //   Navigator.of(context).pop();
+      // });
+
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addItem(_newProduct);
+      } catch (error) {
+        await showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            icon: const Icon(Icons.error),
+            title: const Text('Error'),
+            content: const Text("Something went wrong!"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+        Get.back();
+      }
     } else {
       // component.mySnackbar("Updated", "Product updated successfully");
       _isLoading = false;
       Provider.of<Products>(context, listen: false)
           .updateItem(_newProduct.id, _newProduct);
+      Navigator.of(context).pop();
     }
   }
 
