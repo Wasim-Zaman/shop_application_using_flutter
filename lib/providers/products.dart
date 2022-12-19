@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import '../components/my_components.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
@@ -67,16 +71,42 @@ class Products with ChangeNotifier {
     return _items.where((element) => element.isFavorite == true).toList();
   }
 
-  void addItem(Product product) {
-    final newProduct = Product(
-      id: DateTime.now().toString(),
-      title: product.title,
-      description: product.title,
-      price: product.price,
-      imageUrl: product.imageUrl,
-    );
-    _items.add(newProduct);
-    notifyListeners(); // This method will notify all the listeners for the update
+  Future<void> addItem(Product product) async {
+    const url =
+        'https://shop-application-296aa-default-rtdb.firebaseio.com/products.json';
+
+    http
+        .post(
+      Uri.parse(url),
+      body: json.encode(
+        {
+          'id': product.id,
+          'title': product.title,
+          'price': product.price,
+          'description': product.description,
+          'imageUrl': product.imageUrl,
+          'isFavorite': product.isFavorite,
+        },
+      ),
+    )
+        .then((response) {
+      // if (response.statusCode == 200) {
+      final body = json.decode(response.body);
+      print("Body: $body");
+      print("Status code: ${response.statusCode}");
+
+      final newProduct = Product(
+        id: body['name'],
+        title: product.title,
+        description: product.title,
+        price: product.price,
+        imageUrl: product.imageUrl,
+      );
+      _items.add(newProduct);
+      notifyListeners();
+      // }
+    });
+    // This method will notify all the listeners for the update
   }
 
   void updateItem(String id, Product product) {
