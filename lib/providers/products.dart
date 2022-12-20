@@ -200,13 +200,19 @@ class Products with ChangeNotifier {
     _items.removeAt(deletedProductIndex);
     notifyListeners();
 
-    final response = await http.delete(Uri.parse(url));
-    if (response.statusCode >= 400) {
-      _items.insert(deletedProductIndex, deletedProduct!);
-      notifyListeners();
-      throw HttpException('Product could not be deleted!');
+    try {
+      final response = await http.delete(Uri.parse(url));
+      print("The response status code is: '${response.statusCode}'");
+      if (response.statusCode >= 400) {
+        _items.insert(deletedProductIndex, deletedProduct);
+        notifyListeners();
+        throw HttpException('Product could not be deleted!');
+      }
+      print('product deleted successfully');
+      deletedProduct = null;
+    } catch (error) {
+      print('internet problem');
+      rethrow;
     }
-
-    deletedProduct = null;
   }
 }

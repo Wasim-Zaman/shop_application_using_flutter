@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../pages/add_or_edit_products_page.dart';
@@ -18,6 +19,8 @@ class UserProductsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final ctx = Theme.of(context);
     return Card(
       elevation: 3,
       child: ListTile(
@@ -47,18 +50,20 @@ class UserProductsItem extends StatelessWidget {
               TextButton(
                 onPressed: () async {
                   try {
-                    Provider.of<Products>(context, listen: false)
+                    await Provider.of<Products>(context, listen: false)
                         .deleteItem(id);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Product deleted successfully!"),
-                      ),
-                    );
+                    // scaffoldMessenger.hideCurrentSnackBar();
+                    // scaffoldMessenger.showSnackBar(
+                    //   const SnackBar(
+                    //     content: Text("Product deleted successfully!"),
+                    //   ),
+                    // );
                   } catch (error) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    scaffoldMessenger.hideCurrentSnackBar();
+                    scaffoldMessenger.showSnackBar(
                       SnackBar(
-                        content: Text(error.toString()),
-                        backgroundColor: Theme.of(context).errorColor,
+                        content: const Text('Product could not be deleted!'),
+                        backgroundColor: ctx.errorColor,
                       ),
                     );
                   }

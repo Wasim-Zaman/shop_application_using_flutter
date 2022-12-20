@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
 import 'package:provider/provider.dart';
 
 import '../pages/add_or_edit_products_page.dart';
@@ -33,7 +34,20 @@ class UserProductPage extends StatelessWidget {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: () => _refreshProducts(context),
+        onRefresh: () async {
+          try {
+            await _refreshProducts(context);
+          } catch (error) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content:
+                    const Text('Problem occured while refreshing the page!'),
+                backgroundColor: Theme.of(context).errorColor,
+              ),
+            );
+          }
+        },
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: ListView.builder(
