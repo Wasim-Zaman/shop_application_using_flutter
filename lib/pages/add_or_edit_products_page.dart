@@ -172,19 +172,41 @@ class _AddOrEditProductsPageState extends State<AddOrEditProductsPage> {
             ],
           ),
         );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-        Get.back();
       }
+      //  finally {
+      //   setState(() {
+      //     _isLoading = false;
+      //   });
+      //   Get.back();
+      // }
     } else {
       // component.mySnackbar("Updated", "Product updated successfully");
-      _isLoading = false;
-      Provider.of<Products>(context, listen: false)
-          .updateItem(_newProduct.id, _newProduct);
-      Navigator.of(context).pop();
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .updateItem(_newProduct.id, _newProduct);
+      } catch (error) {
+        await showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            icon: const Icon(Icons.error),
+            title: const Text('Error'),
+            content: const Text("Something went wrong!"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      }
     }
+    setState(() {
+      _isLoading = false;
+    });
+    Get.back();
   }
 
   bool isNumeric(String str) {

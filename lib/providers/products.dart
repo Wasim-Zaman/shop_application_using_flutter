@@ -170,9 +170,19 @@ class Products with ChangeNotifier {
     }
   }
 
-  void updateItem(String id, Product product) {
+  Future<void> updateItem(String id, Product product) async {
     final productIndex = _items.indexWhere((item) => item.id == id);
+
     if (productIndex >= 0) {
+      final url =
+          'https://shop-application-296aa-default-rtdb.firebaseio.com/products/$id.json';
+      await http.patch(Uri.parse(url),
+          body: json.encode({
+            "title": product.title,
+            "description": product.description,
+            "price": product.price,
+            "imageUrl": product.imageUrl,
+          }));
       _items[productIndex] = product;
       notifyListeners();
     } else {
@@ -180,7 +190,11 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteItem(String id) {
+  Future<void> deleteItem(String id) async {
+    final url =
+        'https://shop-application-296aa-default-rtdb.firebaseio.com/products/$id.json';
+
+    http.delete(Uri.parse(url));
     _items.removeWhere((element) => element.id == id);
     notifyListeners();
   }
