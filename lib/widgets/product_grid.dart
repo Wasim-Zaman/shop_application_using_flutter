@@ -6,7 +6,8 @@ import "../providers/products.dart";
 
 class ProductGrid extends StatelessWidget {
   final bool showFavoriteOnly;
-  const ProductGrid(this.showFavoriteOnly, {super.key});
+  final isLoading;
+  const ProductGrid(this.showFavoriteOnly, this.isLoading, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +29,14 @@ class ProductGrid extends StatelessWidget {
           child: ChangeNotifierProvider.value(
             value: products[index],
             // create: (context) => products[index],
-            child: const ProductItem(
-                // products[index].id,
-                // products[index].title,
-                // // products[index].price,
-                // products[index].imageUrl,
-                ),
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : const ProductItem(
+                    // products[index].id,
+                    // products[index].title,
+                    // // products[index].price,
+                    // products[index].imageUrl,
+                    ),
           ),
         );
       },

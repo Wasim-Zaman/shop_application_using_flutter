@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
 import "../components/my_components.dart";
+import '../providers/products.dart';
 import '../widgets/product_grid.dart';
 import "../providers/cart.dart";
 import "../widgets/badge.dart";
@@ -17,6 +18,25 @@ class ProductOverViewPage extends StatefulWidget {
 
 class _ProductOverViewPageState extends State<ProductOverViewPage> {
   var _isFavorite = false;
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    setState(() {
+      _isLoading = true;
+    });
+    Future.delayed(Duration.zero).then((_) {
+      Provider.of<Products>(context, listen: false)
+          .fetchStoredProducts()
+          .then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final cartData = Provider.of<Cart>(context);
@@ -60,8 +80,11 @@ class _ProductOverViewPageState extends State<ProductOverViewPage> {
             },
             icon: const Icon(Icons.more_vert),
           ),
-          Badge(
-            value: cartData.countCarts.toString(),
+          Consumer(
+            builder: (_, cart, ch) => Badge(
+              value: cartData.countCarts.toString(),
+              child: ch!,
+            ),
             child: IconButton(
               onPressed: () {
                 // Navigate to cart page
@@ -73,7 +96,7 @@ class _ProductOverViewPageState extends State<ProductOverViewPage> {
         ],
       ),
       backgroundColor: Colors.white,
-      body: ProductGrid(_isFavorite),
+      body: ProductGrid(_isFavorite, _isLoading),
     );
   }
 }
