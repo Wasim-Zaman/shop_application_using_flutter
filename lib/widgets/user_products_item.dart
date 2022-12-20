@@ -45,13 +45,23 @@ class UserProductsItem extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  Provider.of<Products>(context, listen: false).deleteItem(id);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Product deleted successfully!"),
-                    ),
-                  );
+                onPressed: () async {
+                  try {
+                    Provider.of<Products>(context, listen: false)
+                        .deleteItem(id);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Product deleted successfully!"),
+                      ),
+                    );
+                  } catch (error) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(error.toString()),
+                        backgroundColor: Theme.of(context).errorColor,
+                      ),
+                    );
+                  }
                 },
                 child: Icon(
                   Icons.delete,
