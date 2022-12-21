@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../pages/user_product_page.dart';
 import '../pages/orders_page.dart';
@@ -28,7 +29,11 @@ class AppDrawer extends StatelessWidget {
           AppBar(
             automaticallyImplyLeading: false,
             title: const Text('Screens'),
-            backgroundColor: Theme.of(context).primaryColor,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.black38,
+              statusBarIconBrightness: Brightness.light,
+            ),
+            backgroundColor: Colors.black38,
           ),
           ...drawerItem(
             context,

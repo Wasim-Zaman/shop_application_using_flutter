@@ -39,31 +39,61 @@ class ListTileItem extends StatelessWidget {
               ),
               backgroundColor: Theme.of(context).primaryColor,
             ),
-            TextButton(
-              onPressed: () {
-                // order your product now
-                if (cartData.items.values.isNotEmpty) {
-                  Provider.of<Orders>(context, listen: false).addOrder(
-                      cartData.items.values.toList(), cartData.totalAmount);
-                  cartData.clear();
-                } else {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('No products in cart!'),
-                      backgroundColor: Theme.of(context).errorColor,
-                    ),
-                  );
-                }
-              },
-              child: Text(
-                "ORDER NOW",
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-            ),
+            OrderButton(cartData: cartData),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.cartData,
+  }) : super(key: key);
+
+  final Cart cartData;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  bool _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: (widget.cartData.totalAmount <= 0 || _isLoading)
+          ? null
+          : () async {
+              // order your product now
+              print('inside order');
+              if (widget.cartData.items.values.isNotEmpty) {
+                setState(() {
+                  _isLoading = true;
+                });
+                await Provider.of<Orders>(context, listen: false).addOrder(
+                    widget.cartData.items.values.toList(),
+                    widget.cartData.totalAmount);
+                setState(() {
+                  _isLoading = false;
+                });
+                widget.cartData.clear();
+              } else {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('No products in cart!'),
+                    backgroundColor: Theme.of(context).errorColor,
+                  ),
+                );
+              }
+            },
+      child: Text(
+        "ORDER NOW",
+        style: TextStyle(
+          color: Theme.of(context).primaryColor,
         ),
       ),
     );

@@ -23,6 +23,8 @@ class ProductGrid extends StatelessWidget {
         mainAxisSpacing: 10,
       ),
       itemBuilder: (ctx, index) {
+        // print(
+        // '^^^^^^^ ${products[index].isFavorite} ^^^^^^^ \n ${products[index].title}');
         return Container(
           padding: const EdgeInsets.all(5.0),
           child: ChangeNotifierProvider.value(

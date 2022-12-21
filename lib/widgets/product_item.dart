@@ -25,8 +25,9 @@ class ProductItem extends StatelessWidget {
       child: GridTile(
         footer: GridTileBar(
           backgroundColor: Colors.black87,
-          leading: Consumer<Product>(
-            builder: (context, prdt, child) => IconButton(
+          leading: Consumer<Product>(builder: (context, prdt, child) {
+            // print('######## ${prdt.isFavorite} *******');
+            return IconButton(
               icon: Icon(
                 prdt.isFavorite ? Icons.favorite : Icons.favorite_border,
                 color: Colors.red,
@@ -34,8 +35,8 @@ class ProductItem extends StatelessWidget {
               onPressed: () {
                 prdt.toggleFavoriteStatus();
               },
-            ),
-          ),
+            );
+          }),
           title: Text(
             product.title,
             textAlign: TextAlign.center,

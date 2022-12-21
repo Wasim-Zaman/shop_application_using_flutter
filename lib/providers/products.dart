@@ -94,6 +94,7 @@ class Products with ChangeNotifier {
           description: productData['description'],
           price: productData['price'],
           imageUrl: productData['imageUrl'],
+          isFavorite: productData['isFavorite'],
         );
         listOfLoadedProducts.add(newProduct);
       });
@@ -172,7 +173,7 @@ class Products with ChangeNotifier {
       notifyListeners();
     } catch (error) {
       print('error');
-      throw error;
+      rethrow;
     }
   }
 
