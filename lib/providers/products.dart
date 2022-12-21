@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 // import '../components/my_components.dart';
+import '../models/no_products_exception.dart';
 import '../models/http_exception.dart';
 import 'product.dart';
 
@@ -80,8 +81,12 @@ class Products with ChangeNotifier {
       final List<Product> listOfLoadedProducts = [];
       // checking the type of the response.
 
-      // print(json.decode(response.body));
+      print("Body = = = ${json.decode(response.body)}");
+
       final responseBody = json.decode(response.body) as Map<String, dynamic>;
+      if (responseBody == null) {
+        throw NoProductsException('No products found');
+      }
       responseBody.forEach((productId, productData) {
         final Product newProduct = Product(
           id: productId,

@@ -19,6 +19,7 @@ class ProductOverViewPage extends StatefulWidget {
 class _ProductOverViewPageState extends State<ProductOverViewPage> {
   var _isFavorite = false;
   var _isLoading = false;
+  var _isException = false;
 
   @override
   void initState() {
@@ -31,6 +32,11 @@ class _ProductOverViewPageState extends State<ProductOverViewPage> {
           .then((_) {
         setState(() {
           _isLoading = false;
+        });
+      }).catchError((error) {
+        print('******* Inside except block *********');
+        setState(() {
+          _isException = true;
         });
       });
     });
@@ -96,7 +102,18 @@ class _ProductOverViewPageState extends State<ProductOverViewPage> {
         ],
       ),
       backgroundColor: Colors.white,
-      body: ProductGrid(_isFavorite, _isLoading),
+      body: _isException
+          ? const SizedBox(
+              height: double.infinity,
+              child: Center(
+                child: Text('No products found!'),
+              ),
+            )
+          : (_isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : ProductGrid(_isFavorite)),
     );
   }
 }
