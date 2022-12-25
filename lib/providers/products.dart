@@ -83,10 +83,10 @@ class Products with ChangeNotifier {
 
       print("Body = = = ${json.decode(response.body)}");
 
-      final responseBody = json.decode(response.body) as Map<String, dynamic>;
-      if (responseBody == null) {
+      if (json.decode(response.body) == null) {
         throw NoProductsException('No products found');
       }
+      final responseBody = json.decode(response.body) as Map<String, dynamic>;
       responseBody.forEach((productId, productData) {
         final Product newProduct = Product(
           id: productId,
