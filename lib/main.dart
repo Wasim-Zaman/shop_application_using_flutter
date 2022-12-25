@@ -8,12 +8,14 @@ import './pages/add_or_edit_products_page.dart';
 import "./pages/product_overview_page.dart";
 import './pages/product_detail_screen.dart';
 import './pages/user_product_page.dart';
+import './pages/auth_screen.dart';
 import './pages/orders_page.dart';
 import './pages/cart_page.dart';
 
 import "./providers/products.dart";
 import "./providers/order.dart";
 import "./providers/cart.dart";
+import './providers/auth.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,6 +28,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (context) => Auth(),
+        ),
         ChangeNotifierProvider(
           create: (context) => Products(),
         ),
@@ -47,7 +52,7 @@ class MyApp extends StatelessWidget {
         ),
         // home: ProductOverViewPage(),
         routes: {
-          "/": (context) => const ProductOverViewPage(),
+          "/": (context) => const AuthScreen(),
           ProductDetailScreen.routeName: (context) =>
               const ProductDetailScreen(),
           CartPage.pageName: (context) => const CartPage(),

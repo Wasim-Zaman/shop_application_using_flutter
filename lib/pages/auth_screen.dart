@@ -1,6 +1,11 @@
+// ignore_for_file: prefer_final_fields
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth.dart';
 
 enum AuthMode { signUp, logIn }
 
@@ -27,7 +32,7 @@ class AuthScreen extends StatelessWidget {
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                stops: [0, 1],
+                stops: const [0, 1],
               ),
             ),
           ),
@@ -101,7 +106,7 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  void _submit() async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
       return;
@@ -112,8 +117,14 @@ class _AuthCardState extends State<AuthCard> {
     });
     if (_authMode == AuthMode.logIn) {
       // Log user in
+      await Provider.of<Auth>(context, listen: false)
+          .signin(_authData['email']!, _authData['password']!);
+      print('******** Loged in ********');
     } else {
       // Sign user up
+      await Provider.of<Auth>(context, listen: false)
+          .signup(_authData['email']!, _authData['password']!);
+      print('************ Signed Up ************');
     }
     setState(() {
       _isLoading = false;
