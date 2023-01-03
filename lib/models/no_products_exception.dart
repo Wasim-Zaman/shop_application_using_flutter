@@ -1,5 +1,5 @@
 class NoProductsException implements Exception {
-  final message;
+  final String message;
   NoProductsException(this.message);
 
   @override

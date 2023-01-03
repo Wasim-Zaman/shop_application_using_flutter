@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/utils.dart';
 import 'package:provider/provider.dart';
 
 import '../pages/add_or_edit_products_page.dart';

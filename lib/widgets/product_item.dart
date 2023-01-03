@@ -5,6 +5,7 @@ import "../pages/product_detail_screen.dart";
 
 import "../providers/product.dart";
 import "../providers/cart.dart";
+import '../providers/auth.dart';
 
 class ProductItem extends StatelessWidget {
   const ProductItem({super.key});
@@ -33,7 +34,8 @@ class ProductItem extends StatelessWidget {
                 color: Colors.red,
               ),
               onPressed: () {
-                prdt.toggleFavoriteStatus();
+                final token = Provider.of<Auth>(context).token!;
+                prdt.toggleFavoriteStatus(token);
               },
             );
           }),
