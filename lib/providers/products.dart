@@ -78,7 +78,7 @@ class Products with ChangeNotifier {
 
   Future<void> fetchStoredProducts([bool filterById = false]) async {
     final filterString = filterById ? 'orderBy="userId"&equalTo="$userId"' : '';
-    final url =
+    var url =
         'https://shop-application-296aa-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString';
     try {
       final response = await http.get(Uri.parse(url));
@@ -90,6 +90,10 @@ class Products with ChangeNotifier {
       if (json.decode(response.body) == null) {
         throw NoProductsException('No products found');
       }
+      url =
+          'https://shop-application-296aa-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favoriteResponse = await http.get(Uri.parse(url));
+      final favoriteData = json.decode(favoriteResponse.body);
       final responseBody = json.decode(response.body) as Map<String, dynamic>;
       responseBody.forEach((productId, productData) {
         final Product newProduct = Product(
@@ -98,7 +102,8 @@ class Products with ChangeNotifier {
           description: productData['description'],
           price: productData['price'],
           imageUrl: productData['imageUrl'],
-          isFavorite: productData['isFavorite'],
+          isFavorite:
+              favoriteData == null ? false : favoriteData[productId] ?? false,
         );
         listOfLoadedProducts.add(newProduct);
       });
@@ -157,7 +162,6 @@ class Products with ChangeNotifier {
             'price': product.price,
             'description': product.description,
             'imageUrl': product.imageUrl,
-            'isFavorite': product.isFavorite,
             'userId': userId,
           },
         ),

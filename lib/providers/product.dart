@@ -21,21 +21,19 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  Future<void> toggleFavoriteStatus(String authToken) async {
+  Future<void> toggleFavoriteStatus(String authToken, String userId) async {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
     final url =
-        'https://shop-application-296aa-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
+        'https://shop-application-296aa-default-rtdb.firebaseio.com/userFavorites/$userId/$id.json?auth=$authToken';
 
     try {
-      print('inside try block');
-      final response = await http.patch(
+      // print('inside try block');
+      final response = await http.put(
         Uri.parse(url),
         body: json.encode(
-          {
-            'isFavorite': isFavorite,
-          },
+          isFavorite,
         ),
       );
 

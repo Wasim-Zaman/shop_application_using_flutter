@@ -39,13 +39,13 @@ class _OrdersPageState extends State<OrdersPage> {
             return const Center(child: CircularProgressIndicator());
           } else {
             if (snapshot.error != null) {
-              return const Center(child: Text('An error occured'));
+              return Center(child: Text('${snapshot.error}'));
             } else {
               return Consumer<Orders>(
                 builder: (context, orderData, child) {
                   return orderData.orders.isEmpty
                       ? const Center(
-                          child: Text('No orders'),
+                          child: Text('No orders found!'),
                         )
                       : ListView.builder(
                           itemCount: orderData.orders.length,

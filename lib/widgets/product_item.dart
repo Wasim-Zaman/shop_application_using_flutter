@@ -34,8 +34,11 @@ class ProductItem extends StatelessWidget {
                 color: Colors.red,
               ),
               onPressed: () {
-                final token = Provider.of<Auth>(context).token!;
-                prdt.toggleFavoriteStatus(token);
+                final token = Provider.of<Auth>(context, listen: false).token!;
+                final userId =
+                    Provider.of<Auth>(context, listen: false).userId!;
+
+                prdt.toggleFavoriteStatus(token, userId);
               },
             );
           }),
