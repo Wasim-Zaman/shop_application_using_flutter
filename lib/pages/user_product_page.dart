@@ -11,13 +11,15 @@ class UserProductPage extends StatelessWidget {
   const UserProductPage({super.key});
 
   static const String pageName = '/user-products-page';
-  Future<void> _refreshProducts(BuildContext context) async {
-    await Provider.of<Products>(context, listen: false).fetchStoredProducts();
+  Future<Products> _refreshProducts(BuildContext context) async {
+    await Provider.of<Products>(context, listen: false)
+        .fetchStoredProducts(true);
+    return Provider.of<Products>(context, listen: false);
   }
 
   @override
   Widget build(BuildContext context) {
-    final productsData = Provider.of<Products>(context);
+    // final productsData = Provider.of<Products>(context);
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: appBar(
@@ -32,33 +34,49 @@ class UserProductPage extends StatelessWidget {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          try {
-            await _refreshProducts(context);
-          } catch (error) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content:
-                    const Text('Problem occured while refreshing the page!'),
-                backgroundColor: Theme.of(context).errorColor,
-              ),
-            );
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: ListView.builder(
-              itemCount: productsData.items.length,
-              itemBuilder: (_, index) {
-                return UserProductsItem(
-                  id: productsData.items[index].id,
-                  title: productsData.items[index].title,
-                  imageUrl: productsData.items[index].imageUrl,
-                );
-              }),
-        ),
+      body: FutureBuilder<Products>(
+        future: _refreshProducts(context),
+        builder: (ctx, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      try {
+                        await _refreshProducts(context);
+                      } catch (error) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text(
+                                'Problem occured while refreshing the page!'),
+                            backgroundColor: Theme.of(context).errorColor,
+                          ),
+                        );
+                      }
+                    },
+                    child: snapshot.data!.items.isEmpty
+                        ? const Center(
+                            child: Text('No Products Found!'),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: ListView.builder(
+                              itemCount: snapshot.data?.items.length,
+                              itemBuilder: (_, index) {
+                                final title = snapshot.data?.items[index].title;
+                                final imageUrl =
+                                    snapshot.data?.items[index].imageUrl;
+                                return UserProductsItem(
+                                  id: snapshot.data?.items[index].id,
+                                  title: title!,
+                                  imageUrl: imageUrl!,
+                                );
+                              },
+                            ),
+                          ),
+                  ),
       ),
     );
   }

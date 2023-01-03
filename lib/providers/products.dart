@@ -46,8 +46,9 @@ class Products with ChangeNotifier {
   ];
 
   final String authToken;
+  final userId;
 
-  Products(this.authToken, this._items);
+  Products(this.authToken, this._items, this.userId);
   // var _showFavoritesOnly = false;
   List<Product> get items {
     // if (_showFavoritesOnly) {
@@ -75,9 +76,10 @@ class Products with ChangeNotifier {
     return _items.where((element) => element.isFavorite == true).toList();
   }
 
-  Future<void> fetchStoredProducts() async {
+  Future<void> fetchStoredProducts([bool filterById = false]) async {
+    final filterString = filterById ? 'orderBy="userId"&equalTo="$userId"' : '';
     final url =
-        'https://shop-application-296aa-default-rtdb.firebaseio.com/products.json?auth=$authToken';
+        'https://shop-application-296aa-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString';
     try {
       final response = await http.get(Uri.parse(url));
       final List<Product> listOfLoadedProducts = [];
@@ -156,6 +158,7 @@ class Products with ChangeNotifier {
             'description': product.description,
             'imageUrl': product.imageUrl,
             'isFavorite': product.isFavorite,
+            'userId': userId,
           },
         ),
       );
@@ -185,13 +188,17 @@ class Products with ChangeNotifier {
     if (productIndex >= 0) {
       final url =
           'https://shop-application-296aa-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
-      await http.patch(Uri.parse(url),
-          body: json.encode({
+      await http.patch(
+        Uri.parse(url),
+        body: json.encode(
+          {
             "title": product.title,
             "description": product.description,
             "price": product.price,
             "imageUrl": product.imageUrl,
-          }));
+          },
+        ),
+      );
       _items[productIndex] = product;
       notifyListeners();
     } else {
