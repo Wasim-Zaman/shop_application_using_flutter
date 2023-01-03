@@ -54,10 +54,11 @@ class ProductItem extends StatelessWidget {
                   content: const Text('Item added to cart!'),
                   duration: const Duration(seconds: 3),
                   action: SnackBarAction(
-                      label: "Undo",
-                      onPressed: () {
-                        cartData.removeSingleCartItem(product.id);
-                      }),
+                    label: "Undo",
+                    onPressed: () {
+                      cartData.removeSingleCartItem(product.id);
+                    },
+                  ),
                 ),
               );
             },

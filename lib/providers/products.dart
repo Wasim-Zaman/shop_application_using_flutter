@@ -45,8 +45,10 @@ class Products with ChangeNotifier {
     // ),
   ];
 
-  // var _showFavoritesOnly = false;
+  final String authToken;
 
+  Products(this.authToken, this._items);
+  // var _showFavoritesOnly = false;
   List<Product> get items {
     // if (_showFavoritesOnly) {
     //   return _items.where((productItem) => productItem.isFavorite).toList();
@@ -74,8 +76,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchStoredProducts() async {
-    const url =
-        'https://shop-application-296aa-default-rtdb.firebaseio.com/products.json';
+    final url =
+        'https://shop-application-296aa-default-rtdb.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.get(Uri.parse(url));
       final List<Product> listOfLoadedProducts = [];
@@ -106,8 +108,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addItem(Product product) async {
-    const url =
-        'https://shop-application-296aa-default-rtdb.firebaseio.com/products.json';
+    final url =
+        'https://shop-application-296aa-default-rtdb.firebaseio.com/products.json?auth=$authToken';
 
     // return http
     //     .post(
@@ -182,7 +184,7 @@ class Products with ChangeNotifier {
 
     if (productIndex >= 0) {
       final url =
-          'https://shop-application-296aa-default-rtdb.firebaseio.com/products/$id.json';
+          'https://shop-application-296aa-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
       await http.patch(Uri.parse(url),
           body: json.encode({
             "title": product.title,
@@ -199,7 +201,7 @@ class Products with ChangeNotifier {
 
   Future<void> deleteItem(String id) async {
     final url =
-        'https://shop-application-296aa-default-rtdb.firebaseio.com/products/$id.json';
+        'https://shop-application-296aa-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
     final deletedProductIndex =
         _items.indexWhere((element) => element.id == id);
     Product? deletedProduct = _items.elementAt(deletedProductIndex);

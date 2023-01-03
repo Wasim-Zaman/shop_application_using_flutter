@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
@@ -31,36 +30,42 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => Auth(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => Products(),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          update: (ctx, auth, previous) =>
+              Products(auth.token!, previous == null ? [] : previous.items),
+          create: (context) => Products('', []),
         ),
         ChangeNotifierProvider(
           create: (context) => Cart(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => Orders(),
-        )
-      ],
-      child: GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "Shop",
-        darkTheme: ThemeData.dark(),
-        theme: ThemeData(
-          fontFamily: "Lato",
-          primaryColor: Colors.deepOrange,
-          accentColor: Colors.deepOrangeAccent,
+        ChangeNotifierProxyProvider<Auth, Orders>(
+          update: (ctx, auth, previous) =>
+              Orders(auth.token!, previous == null ? [] : previous.orders),
+          create: (context) => Orders('', []),
         ),
-        // home: ProductOverViewPage(),
-        routes: {
-          "/": (context) => const AuthScreen(),
-          ProductDetailScreen.routeName: (context) =>
-              const ProductDetailScreen(),
-          CartPage.pageName: (context) => const CartPage(),
-          OrdersPage.routeName: (context) => const OrdersPage(),
-          UserProductPage.pageName: (context) => const UserProductPage(),
-          AddOrEditProductsPage.pageName: (context) =>
-              const AddOrEditProductsPage(),
-        },
+      ],
+      child: Consumer<Auth>(
+        builder: (context, auth, _) => GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: "Shop",
+          darkTheme: ThemeData.dark(),
+          theme: ThemeData(
+            fontFamily: "Lato",
+            primaryColor: Colors.deepOrange,
+            accentColor: Colors.deepOrangeAccent,
+          ),
+          home: auth.isAuth ? const ProductOverViewPage() : const AuthScreen(),
+          routes: {
+            // "/": (context) => const AuthScreen(),
+            ProductDetailScreen.routeName: (context) =>
+                const ProductDetailScreen(),
+            CartPage.pageName: (context) => const CartPage(),
+            OrdersPage.routeName: (context) => const OrdersPage(),
+            UserProductPage.pageName: (context) => const UserProductPage(),
+            AddOrEditProductsPage.pageName: (context) =>
+                const AddOrEditProductsPage(),
+          },
+        ),
       ),
     );
   }
