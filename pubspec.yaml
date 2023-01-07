@@ -37,6 +37,8 @@ dependencies:
   intl:
   http: ^0.13.5
   flutter_launcher_icons: ^0.11.0
+  shared_preferences: ^2.0.15
+  shimmer:
 
 flutter_icons:
   android: true

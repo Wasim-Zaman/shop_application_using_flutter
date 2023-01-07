@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 
 import './pages/add_or_edit_products_page.dart';
 import "./pages/product_overview_page.dart";
@@ -31,15 +32,18 @@ class MyApp extends StatelessWidget {
           create: (context) => Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, Products>(
-          update: (ctx, auth, previous) => Products(auth.token!,
-              previous == null ? [] : previous.items, auth.userId!),
+          update: (ctx, auth, previous) {
+            final authToken = auth.token;
+            return Products(authToken, previous == null ? [] : previous.items,
+                auth.userId!);
+          },
           create: (context) => Products('', [], ''),
         ),
         ChangeNotifierProvider(
           create: (context) => Cart(),
         ),
         ChangeNotifierProxyProvider<Auth, Orders>(
-          update: (ctx, auth, previous) => Orders(auth.token!,
+          update: (ctx, auth, previous) => Orders(auth.token,
               previous == null ? [] : previous.orders, auth.userId!),
           create: (context) => Orders('', [], ''),
         ),
@@ -52,9 +56,50 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             fontFamily: "Lato",
             primaryColor: Colors.deepOrange,
+            // scaffoldBackgroundColor: Colors.black,
             accentColor: Colors.deepOrangeAccent,
           ),
-          home: auth.isAuth ? const ProductOverViewPage() : const AuthScreen(),
+          home: auth.isAuth
+              ? const ProductOverViewPage()
+              : FutureBuilder(
+                  future: auth.autoLogin(),
+                  builder: (context, authSnapshot) {
+                    if (authSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Scaffold(
+                        // body: Center(
+                        //   child: CircularProgressIndicator(),
+                        // ),
+                        body: Center(
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.deepOrange,
+                            highlightColor: Colors.deepOrangeAccent,
+                            child: const Text(
+                              'Loading',
+                              style: TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    } else if (authSnapshot.hasError) {
+                      return Scaffold(
+                        body: Center(
+                          child: Text(authSnapshot.error.toString()),
+                        ),
+                      );
+                    } else if (authSnapshot.hasData) {
+                      if (authSnapshot.data == true) {
+                        return const ProductOverViewPage();
+                      } else {
+                        return const AuthScreen();
+                      }
+                    }
+                    return const AuthScreen();
+                  },
+                ),
           routes: {
             // "/": (context) => const AuthScreen(),
             ProductDetailScreen.routeName: (context) =>
